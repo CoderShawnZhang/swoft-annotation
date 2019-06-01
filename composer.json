@@ -3,13 +3,13 @@
     "description": "分布式开始，重写swoft框架之 -- annotation 模块",
     "keywords": ["swoft","annotation"],
     "license": "MIT",
-    "minimum-stability":"dev",
     "authors": [
         {
             "name": "zhanghongbo",
             "email": "taobao1875@163.com"
         }
     ],
+    "minimum-stability":"dev",
     "require": {
         "php": ">7.1.0"
     },
