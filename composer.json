@@ -1,0 +1,20 @@
+{
+    "name": "zhanghongbo/swoft-annotation",
+    "description": "分布式开始，重写swoft框架之 -- annotation 模块",
+    "keywords": ["swoft","annotation"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "zhanghongbo",
+            "email": "taobao1875@163.com"
+        }
+    ],
+    "require": {
+        "php": ">7.1.0"
+    },
+    "autoload": {
+        "psr-4":{
+            "SwoftRewrite\\Annotation\\":"src/"
+        }
+    }
+}
