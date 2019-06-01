@@ -1,5 +1,5 @@
 {
-    "name": "zhanghongbo/swoft-annotation",
+    "name": "swoft-rewrite/swoft-annotation",
     "description": "分布式开始，重写swoft框架之 -- annotation 模块",
     "keywords": ["swoft","annotation"],
     "license": "MIT",
