@@ -7,8 +7,15 @@
  */
 namespace SwoftRewrite\Annotation;
 
+use Composer\Autoload\ClassLoader;
+
 class Annotation
 {
+    public function __construct()
+    {
+
+    }
+
     public function test()
     {
         echo "run Annotation";
