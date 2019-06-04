@@ -4,10 +4,14 @@
  */
 namespace SwoftRewrite\Annotation\Resource;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use SwoftRewrite\Annotation\Annota\Mapping\AnnotationParser;
 use SwoftRewrite\Annotation\AnnotationRegister;
 use SwoftRewrite\Annotation\Contract\LoaderInterface;
 use SwoftRewrite\Stdlib\Helper\ComposerHelper;
 use SwoftRewrite\Stdlib\Helper\DirectoryHelper;
+use SwoftRewrite\Stdlib\Helper\ObjectHelper;
 
 class AnnotationResource
 {
@@ -22,9 +26,9 @@ class AnnotationResource
 
 
     private $classLoader;
-    private $onlyNamespaces = [];
+    public $onlyNamespaces = [];
     private $excludedPsr4Prefixes;
-    private $inPhar = false;
+    public $inPhar = false;
 
     private $disabledAutoLoaders = [];
 
@@ -36,6 +40,8 @@ class AnnotationResource
     public function __construct(array $config = [])
     {
         $this->excludedPsr4Prefixes = self::DEFAULT_EXCLUDED_PSR4_PREFIXES;
+        ObjectHelper::init($this,$config);
+        $this->registerLoader();
         $this->classLoader = ComposerHelper::getClassLoader();
     }
 
@@ -46,7 +52,6 @@ class AnnotationResource
             if($this->onlyNamespaces && !in_array($ns,$this->onlyNamespaces,true)){
                 continue;
             }
-
             //注册到单独的数组，已经包含的指定psr4文件
             if($this->isExcludedPsr4Prefix($ns)){
                 AnnotationRegister::registerExcludeNs($ns);
@@ -75,10 +80,10 @@ class AnnotationResource
         }
     }
 
-    public function isExcludedPsr4Prefix(string $namespec):bool
+    public function isExcludedPsr4Prefix(string $namespace):bool
     {
         foreach($this->excludedPsr4Prefixes as $prefix){
-            if(0 === strpos($namespec,$prefix)){
+            if(0 === strpos($namespace,$prefix)){
                 return true;
             }
         }
@@ -150,6 +155,8 @@ class AnnotationResource
                 }
                 //$ns = ‌SwoftRewrite\Annotation 命名空间（loaderclass记录的）
                 //$className = ‌SwoftRewrite\Annotation\Contract\LoaderInterface
+
+                //遍历组件目录，获取指定注解 ，注册到注解数组
                 $this->parseAnnotation($ns,$className);
             }
         }
@@ -162,12 +169,85 @@ class AnnotationResource
         if($reflectionClass->isAbstract()){
             return;
         }
-        $oneClassAnnotation = $this->
+        $oneClassAnnotation = $this->parseOneClassAnnotation($reflectionClass);
+        //如果不等于空，
+        if(!empty($oneClassAnnotation)){
+            AnnotationRegister::registerAnnotation($namespace,$className,$oneClassAnnotation);
+        }
     }
 
     private function parseOneClassAnnotation(\ReflectionClass $reflectionClass): array
     {
         //注解 读取器。
-        $reader = new AnnotationReader
+        $reader = new AnnotationReader();
+        $className = $reflectionClass->getName();
+
+        $oneClassAnnotation = [];
+        $classAnnotations = $reader->getClassAnnotations($reflectionClass);
+        //注册 解析
+        foreach($classAnnotations as $classAnnotation){
+            if($classAnnotation instanceof AnnotationParser){
+                $this->registerParser($className,$classAnnotation);
+                return [];
+            }
+        }
+
+        // 类解析
+        if(!empty($classAnnotations)){
+            $oneClassAnnotation['annotation'] = $classAnnotations;
+            $oneClassAnnotation['reflection'] = $reflectionClass;
+        }
+
+        //属性解析
+        $reflectionProperties = $reflectionClass->getProperties();
+        foreach($reflectionProperties as $reflectionProperty){
+            $propertyName = $reflectionProperty->getName();
+            $propertyAnnotations = $reader->getPropertyAnnotations($reflectionProperty);
+            if(!empty($propertyAnnotations)){
+                $oneClassAnnotation['properties'][$propertyName]['annotation'] = $propertyAnnotations;
+                $oneClassAnnotation['properties'][$propertyName]['reflection'] = $reflectionProperty;
+            }
+        }
+
+        //函数解析
+        $reflectionMethods = $reflectionClass->getMethods();
+        foreach($reflectionMethods as $reflectionMethod){
+            $methodName = $reflectionMethod->getName();
+            $methodAnnotations = $reader->getMethodAnnotations($reflectionMethod);
+            if(!empty($methodAnnotations)){
+                $oneClassAnnotation['methods'][$methodName]['annotation'] = $methodAnnotations;
+                $oneClassAnnotation['methods'][$methodName]['reflection'] = $reflectionMethod;
+            }
+        }
+
+        $parentReflectionClass = $reflectionClass->getParentClass();
+        if($parentReflectionClass !== false){
+            $parentClassAnnotation = $this->parseOneClassAnnotation($parentReflectionClass);
+            if(!empty($parentClassAnnotation)){
+                $oneClassAnnotation['parent'] = $parentClassAnnotation;
+            }
+        }
+        return $oneClassAnnotation;
+    }
+
+    /**
+     * 注册 注释 => 类名
+     * @param string $parserClassName
+     * @param AnnotationParser $annotationParser
+     */
+    private function registerParser(string $parserClassName,AnnotationParser $annotationParser): void
+    {
+        $annotationClass = $annotationParser->getAnnotation();
+        AnnotationRegister::registerParser($annotationClass,$parserClassName);
+    }
+
+    private function registerLoader()
+    {
+        AnnotationRegistry::registerLoader(function(string $class){
+           if(class_exists($class)){
+               return true;
+           }
+           return false;
+        });
     }
 }

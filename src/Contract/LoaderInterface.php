@@ -7,7 +7,14 @@
  */
 namespace SwoftRewrite\Annotation\Contract;
 
+/**
+ * Interface LoaderInterface
+ * @package SwoftRewrite\Annotation\Contract
+ */
 interface LoaderInterface
 {
+    /**
+     * @return mixed
+     */
     public function getPrefixDirs();
 }

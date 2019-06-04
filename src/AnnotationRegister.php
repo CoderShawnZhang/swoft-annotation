@@ -9,6 +9,10 @@ namespace SwoftRewrite\Annotation;
 use SwoftRewrite\Annotation\Contract\LoaderInterface;
 use SwoftRewrite\Annotation\Resource\AnnotationResource;
 
+/**
+ * Class AnnotationRegister
+ * @package SwoftRewrite\Annotation
+ */
 class AnnotationRegister
 {
     /**
@@ -22,6 +26,10 @@ class AnnotationRegister
     private static $excludeNamespaces = [];
 
     private static $autoLoaderFiles = [];
+
+    private static $parsers = [];
+
+    private static $annotations = [];
 
     private static $classStats = [
         'parser' => 0,
@@ -47,6 +55,15 @@ class AnnotationRegister
     }
 
     /**
+     * 注册 注解
+     */
+    public static function registerAnnotation(string $loadNamespace,string $className,array $classAnnotation): void
+    {
+        self::$classStats['annotation']++;
+        self::$annotations[$loadNamespace][$className] = $classAnnotation;
+    }
+
+    /**
      * @param string $file
      */
     public static function registerAutoLoaderFile(string $file): void
@@ -57,6 +74,12 @@ class AnnotationRegister
     public static function registerExcludeFilename(string $filename): void
     {
         self::$excludeFilenames[] = $filename;
+    }
+
+    public static function registerParser(string $annotationClass,string $parserClassName):void
+    {
+        self::$classStats['parser']++;
+        self::$parsers[$annotationClass] = $parserClassName; // 注释 => 类名
     }
 
     /**
@@ -70,6 +93,9 @@ class AnnotationRegister
         self::$autoLoaderFiles[$namespace] = $autoLoader;
     }
 
+    public static function getClassStats(){
+        return self::$classStats;
+    }
     /**
      * 根据命名空间获取loaderclass对象
      *
@@ -79,5 +105,10 @@ class AnnotationRegister
     public static function getAutoLoader(string $namespace): ?LoaderInterface
     {
         return self::$autoLoaderFiles[$namespace] ?? null;
+    }
+
+    public static function getAnnotations()
+    {
+        return self::$annotations;
     }
 }
