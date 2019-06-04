@@ -2,14 +2,14 @@
 <html lang="en">
  <head>
   <meta charset="UTF-8">
-  <title>Dashboard for /Users/zhanghongbo/develop/swoftRewrite/swoft-annotation/src/Annotation</title>
+  <title>Dashboard for /Users/zhanghongbo/develop/swoftRewrite/swoft-annotation/src/Annotation/Parser</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="../.css/bootstrap.min.css" rel="stylesheet">
-  <link href="../.css/nv.d3.min.css" rel="stylesheet">
-  <link href="../.css/style.css" rel="stylesheet">
+  <link href="../../.css/bootstrap.min.css" rel="stylesheet">
+  <link href="../../.css/nv.d3.min.css" rel="stylesheet">
+  <link href="../../.css/style.css" rel="stylesheet">
   <!--[if lt IE 9]>
-  <script src="../.js/html5shiv.min.js"></script>
-  <script src="../.js/respond.min.js"></script>
+  <script src="../../.js/html5shiv.min.js"></script>
+  <script src="../../.js/respond.min.js"></script>
   <![endif]-->
  </head>
  <body>
@@ -18,8 +18,9 @@
     <div class="row">
      <div class="col-md-12">
       <ol class="breadcrumb">
-        <li><a href="../index.html">/Users/zhanghongbo/develop/swoftRewrite/swoft-annotation/src</a></li>
-        <li><a href="index.html">Annotation</a></li>
+        <li><a href="../../index.html">/Users/zhanghongbo/develop/swoftRewrite/swoft-annotation/src</a></li>
+        <li><a href="../index.html">Annotation</a></li>
+        <li><a href="index.html">Parser</a></li>
         <li class="active">(Dashboard)</li>
 
       </ol>
@@ -59,7 +60,6 @@
         </tr>
        </thead>
        <tbody>
-       <tr><td><a href="Mapping/AnnotationParser.php.html#16">AnnotationParser</a></td><td class="text-right">83%</td></tr>
 
        </tbody>
       </table>
@@ -76,7 +76,6 @@
         </tr>
        </thead>
        <tbody>
-       <tr><td><a href="Mapping/AnnotationParser.php.html#16">AnnotationParser</a></td><td class="text-right">4</td></tr>
 
        </tbody>
       </table>
@@ -114,7 +113,6 @@
         </tr>
        </thead>
        <tbody>
-       <tr><td><a href="Mapping/AnnotationParser.php.html#20"><abbr title="AnnotationParser::__construct">__construct</abbr></a></td><td class="text-right">80%</td></tr>
 
        </tbody>
       </table>
@@ -131,7 +129,6 @@
         </tr>
        </thead>
        <tbody>
-       <tr><td><a href="Mapping/AnnotationParser.php.html#20"><abbr title="AnnotationParser::__construct">__construct</abbr></a></td><td class="text-right">3</td></tr>
 
        </tbody>
       </table>
@@ -145,11 +142,11 @@
     </p>
    </footer>
   </div>
-  <script src="../.js/jquery.min.js" type="text/javascript"></script>
-  <script src="../.js/bootstrap.min.js" type="text/javascript"></script>
-  <script src="../.js/holder.min.js" type="text/javascript"></script>
-  <script src="../.js/d3.min.js" type="text/javascript"></script>
-  <script src="../.js/nv.d3.min.js" type="text/javascript"></script>
+  <script src="../../.js/jquery.min.js" type="text/javascript"></script>
+  <script src="../../.js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="../../.js/holder.min.js" type="text/javascript"></script>
+  <script src="../../.js/d3.min.js" type="text/javascript"></script>
+  <script src="../../.js/nv.d3.min.js" type="text/javascript"></script>
   <script type="text/javascript">
 $(document).ready(function() {
   nv.addGraph(function() {
@@ -162,7 +159,7 @@ $(document).ready(function() {
       .yAxis.tickFormat(d3.format('d'));
 
     d3.select('#classCoverageDistribution svg')
-      .datum(getCoverageDistributionData([0,0,0,0,0,0,0,0,0,1,0,1], "Class Coverage"))
+      .datum(getCoverageDistributionData([0,0,0,0,0,0,0,0,0,0,0,1], "Class Coverage"))
       .transition().duration(500).call(chart);
 
     nv.utils.windowResize(chart.update);
@@ -180,7 +177,7 @@ $(document).ready(function() {
       .yAxis.tickFormat(d3.format('d'));
 
     d3.select('#methodCoverageDistribution svg')
-      .datum(getCoverageDistributionData([0,0,0,0,0,0,0,0,0,1,0,1], "Method Coverage"))
+      .datum(getCoverageDistributionData([0,0,0,0,0,0,0,0,0,0,0,0], "Method Coverage"))
       .transition().duration(500).call(chart);
 
     nv.utils.windowResize(chart.update);
@@ -230,7 +227,7 @@ $(document).ready(function() {
     chart.yAxis.axisLabel('Cyclomatic Complexity');
 
     d3.select('#classComplexity svg')
-      .datum(getComplexityData([[83.33333333333334,4,"<a href=\"Mapping\/AnnotationParser.php.html#16\">AnnotationParser<\/a>"],[100,0,"<a href=\"Parser\/Parser.php.html#12\">Parser<\/a>"]], 'Class Complexity'))
+      .datum(getComplexityData([[100,0,"<a href=\"Parser.php.html#12\">Parser<\/a>"]], 'Class Complexity'))
       .transition()
       .duration(500)
       .call(chart);
@@ -254,7 +251,7 @@ $(document).ready(function() {
     chart.yAxis.axisLabel('Method Complexity');
 
     d3.select('#methodComplexity svg')
-      .datum(getComplexityData([[80,3,"<a href=\"Mapping\/AnnotationParser.php.html#20\">AnnotationParser::__construct<\/a>"],[100,1,"<a href=\"Mapping\/AnnotationParser.php.html#30\">AnnotationParser::getAnnotation<\/a>"]], 'Method Complexity'))
+      .datum(getComplexityData([], 'Method Complexity'))
       .transition()
       .duration(500)
       .call(chart);

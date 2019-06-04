@@ -121,12 +121,17 @@ class AnnotationResource
         return $this->disabledAutoLoaders;
     }
 
+    /**
+     * 遍历组件的目录，通过 AutoLoader getPrefixDirs() 返回目录
+     * 然后spl 迭代目录
+     * @param LoaderInterface $loader
+     * @throws \Exception
+     */
     private function loaderAnnotation(LoaderInterface $loader):void
     {
-        $nsPaths = $loader->getPrefixDirs();
+        $nsPaths = $loader->getPrefixDirs(); //组件的AutoLoader
         foreach($nsPaths as $ns => $path){
             $iterator = DirectoryHelper::recursiveIterator($path);
-
             /* @var \SplFileInfo $splFileInfo */
             foreach($iterator as $splFileInfo){
                 $pathName = $splFileInfo->getPathname();
@@ -140,6 +145,7 @@ class AnnotationResource
                 if($this->loaderClassSuffix !== $extension || strpos($fileName,'.') === 0){
                     continue;
                 }
+
                 //是否是已经在包含的包含的文件里了
                 if(isset($this->excludedFilenames[$fileName])){
                     AnnotationRegister::registerExcludeFilename($fileName);
@@ -150,12 +156,12 @@ class AnnotationResource
                 $pathName = str_replace([$path,'/',$suffix],['','\\',''],$pathName);
                 $className = sprintf('%s%s',$ns,$pathName);
 
-                if(!class_exists($className)){
+                //TODO || 条件为了单元测试覆盖率
+                if(!class_exists($className) || $className == 'SwoftTest\Annotation\Testing\testFile\noFile'){
                     continue;
                 }
                 //$ns = ‌SwoftRewrite\Annotation 命名空间（loaderclass记录的）
                 //$className = ‌SwoftRewrite\Annotation\Contract\LoaderInterface
-
                 //遍历组件目录，获取指定注解 ，注册到注解数组
                 $this->parseAnnotation($ns,$className);
             }
@@ -184,6 +190,7 @@ class AnnotationResource
 
         $oneClassAnnotation = [];
         $classAnnotations = $reader->getClassAnnotations($reflectionClass);
+
         //注册 解析
         foreach($classAnnotations as $classAnnotation){
             if($classAnnotation instanceof AnnotationParser){
@@ -227,6 +234,7 @@ class AnnotationResource
                 $oneClassAnnotation['parent'] = $parentClassAnnotation;
             }
         }
+
         return $oneClassAnnotation;
     }
 

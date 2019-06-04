@@ -11,6 +11,7 @@ namespace SwoftTest\Annotation\Unit;
 
 use PHPUnit\Framework\TestCase;
 use SwoftRewrite\Annotation\AnnotationRegister;
+use SwoftRewrite\Annotation\Resource\AnnotationResource;
 use SwoftRewrite\Stdlib\Helper\ComposerHelper;
 
 class AnnotationCoverageTest extends TestCase
@@ -40,5 +41,14 @@ class AnnotationCoverageTest extends TestCase
             );
         }
        self::assertTrue(true);
+    }
+
+    public function testB()
+    {
+        $array = [1,2,3];
+        $annotationResource = new AnnotationResource();
+        $annotationResource->setDisabledAutoLoaders($array);
+        $res = $annotationResource->getDisabledAutoLoaders();
+        self::assertEquals($array,$res);
     }
 }

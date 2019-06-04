@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 use SwoftRewrite\Annotation\AnnotationRegister;
 use SwoftRewrite\Annotation\Test\AnnotationDemo;
 use SwoftTest\Annotation\Testing\Annotation\Mapping\DemoClass;
+use SwoftTest\Annotation\Testing\Annotation\Mapping\DemoMethod;
+use SwoftTest\Annotation\Testing\Annotation\Mapping\DemoProperty;
 use SwoftTest\Annotation\Testing\DemoAnnotation;
 
 
@@ -30,6 +32,10 @@ class AnnotationTest extends TestCase
         $this->assertTrue(true);
     }
 
+    public function testAnnotation1()
+    {
+        self::assertTrue(true);
+    }
     /**
      * @depends testInit
      */
@@ -40,8 +46,8 @@ class AnnotationTest extends TestCase
 
         $annotations = AnnotationRegister::getAnnotations();
         $demoAnnotation = $annotations[$testAnnotationClassFile][DemoAnnotation::class] ?? [];
-        $this->assertTrue(!empty($demoAnnotation));
 
+        $this->assertTrue(!empty($demoAnnotation));
         $this->assertTrue(isset($demoAnnotation['reflection']));
 
         $AnnotationClassName = [
@@ -51,6 +57,24 @@ class AnnotationTest extends TestCase
             self::assertTrue(in_array(get_class($annotation),$AnnotationClassName));
             if($annotation instanceof DemoClass){
                 $this->assertEquals($annotation->getName(),$testAnnotationText);
+            }
+        }
+        $AnnotationPropertyName = [
+            DemoProperty::class
+        ];
+        foreach($demoAnnotation['properties']['color']['annotation'] as $annotation){
+            self::assertTrue(in_array(get_class($annotation),$AnnotationPropertyName));
+            if($annotation instanceof DemoProperty){
+                $this->assertEquals($annotation->getName(),'green');
+            }
+        }
+        $AnnotationMethodName = [
+            DemoMethod::class
+        ];
+        foreach($demoAnnotation['methods']['change']['annotation'] as $annotation){
+            self::assertTrue(in_array(get_class($annotation),$AnnotationMethodName));
+            if($annotation instanceof DemoMethod){
+                $this->assertEquals($annotation->getName(),'change');
             }
         }
     }
