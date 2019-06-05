@@ -12,22 +12,13 @@ namespace SwoftTest\Annotation\Unit;
 use PHPUnit\Framework\TestCase;
 use SwoftRewrite\Annotation\Annotation\Parser\ParserInterface;
 use SwoftRewrite\Annotation\AnnotationRegister;
-use SwoftRewrite\Annotation\AutoLoader;
 use SwoftRewrite\Annotation\Contract\LoaderInterface;
-use SwoftRewrite\Annotation\Test\AnnotationDemo;
 use SwoftTest\Annotation\Testing\Annotation\Mapping\DemoClass;
 use SwoftTest\Annotation\Testing\Annotation\Mapping\DemoMethod;
 use SwoftTest\Annotation\Testing\Annotation\Mapping\DemoProperty;
 use SwoftTest\Annotation\Testing\Annotation\Parser\DemoClassParser;
 use SwoftTest\Annotation\Testing\Annotation\Parser\DemoClassParser1;
 use SwoftTest\Annotation\Testing\DemoAnnotation;
-
-// @codeCoverageIgnoreStart
-abstract class Parser implements ParserInterface
-{
-
-}
-// @codeCoverageIgnoreEnd
 
 class AnnotationTest extends TestCase
 {
@@ -44,10 +35,6 @@ class AnnotationTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function testAnnotation1()
-    {
-        self::assertTrue(true);
-    }
     /**
      * @depends testInit
      */
