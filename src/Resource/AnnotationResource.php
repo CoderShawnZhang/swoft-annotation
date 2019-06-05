@@ -13,7 +13,7 @@ use SwoftRewrite\Stdlib\Helper\ComposerHelper;
 use SwoftRewrite\Stdlib\Helper\DirectoryHelper;
 use SwoftRewrite\Stdlib\Helper\ObjectHelper;
 
-class AnnotationResource
+class AnnotationResource extends Resource
 {
     public const DEFAULT_EXCLUDED_PSR4_PREFIXES = [
         'Prs\\',
@@ -36,7 +36,6 @@ class AnnotationResource
         'Swoft.php' => 1
     ];
 
-
     public function __construct(array $config = [])
     {
         $this->excludedPsr4Prefixes = self::DEFAULT_EXCLUDED_PSR4_PREFIXES;
@@ -45,6 +44,9 @@ class AnnotationResource
         $this->classLoader = ComposerHelper::getClassLoader();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function load()
     {
         $prefixDirsPsr4 = $this->classLoader->getPrefixesPsr4();
@@ -146,7 +148,7 @@ class AnnotationResource
                     continue;
                 }
 
-                //是否是已经在包含的包含的文件里了
+                //是否遍历到了Swoft.php文件
                 if(isset($this->excludedFilenames[$fileName])){
                     AnnotationRegister::registerExcludeFilename($fileName);
                     continue;
@@ -175,6 +177,9 @@ class AnnotationResource
         if($reflectionClass->isAbstract()){
             return;
         }
+        //解析类的注释，
+        //  1：是 AnnotationParser 注释。
+        //  2不是AnnotationParser注释，将整个类的注释，属性注释，方法注释放到数组annotation，还有类的反射放到数组reflection
         $oneClassAnnotation = $this->parseOneClassAnnotation($reflectionClass);
         //如果不等于空，
         if(!empty($oneClassAnnotation)){

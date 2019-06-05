@@ -10,22 +10,34 @@ namespace SwoftTest\Annotation\Unit;
 
 
 use PHPUnit\Framework\TestCase;
+use SwoftRewrite\Annotation\Annotation\Parser\ParserInterface;
 use SwoftRewrite\Annotation\AnnotationRegister;
+use SwoftRewrite\Annotation\AutoLoader;
+use SwoftRewrite\Annotation\Contract\LoaderInterface;
 use SwoftRewrite\Annotation\Test\AnnotationDemo;
 use SwoftTest\Annotation\Testing\Annotation\Mapping\DemoClass;
 use SwoftTest\Annotation\Testing\Annotation\Mapping\DemoMethod;
 use SwoftTest\Annotation\Testing\Annotation\Mapping\DemoProperty;
+use SwoftTest\Annotation\Testing\Annotation\Parser\DemoClassParser;
+use SwoftTest\Annotation\Testing\Annotation\Parser\DemoClassParser1;
 use SwoftTest\Annotation\Testing\DemoAnnotation;
 
+// @codeCoverageIgnoreStart
+abstract class Parser implements ParserInterface
+{
+
+}
+// @codeCoverageIgnoreEnd
 
 class AnnotationTest extends TestCase
 {
+    public $testDir = 'SwoftTest\\Annotation\\Testing\\';
     public function testInit()
     {
         AnnotationRegister::load(
             [
                 'onlyNamespaces' => [
-                    'SwoftTest\\Annotation\\Testing\\'
+                    $this->testDir
                 ],
             ]
         );
@@ -77,5 +89,35 @@ class AnnotationTest extends TestCase
                 $this->assertEquals($annotation->getName(),'change');
             }
         }
+    }
+
+    /**
+     * @depends testAnnotationClass
+     */
+    public function testParser()
+    {
+        $parsers = AnnotationRegister::getParsers();//获取
+
+        $parserClassName = [
+            DemoClassParser::class,
+            DemoClassParser1::class
+        ];
+
+        if (empty($parsers)) {
+            $this->assertTrue(false);
+        }
+
+        foreach($parsers as $parser){
+            $this->assertTrue(in_array($parser,$parserClassName));
+        }
+    }
+
+    /**
+     * @depends testAnnotationClass
+     */
+    public function testAutoLoader()
+    {
+        $autoLoader = AnnotationRegister::getAutoLoader($this->testDir);
+        $this->assertTrue($autoLoader instanceof LoaderInterface);
     }
 }

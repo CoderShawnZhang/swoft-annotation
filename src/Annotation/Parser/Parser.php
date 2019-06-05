@@ -8,7 +8,6 @@
 
 namespace SwoftRewrite\Annotation\Annotation\Parser;
 
-
 abstract class Parser implements ParserInterface
 {
 

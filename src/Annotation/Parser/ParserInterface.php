@@ -11,5 +11,5 @@ namespace SwoftRewrite\Annotation\Annotation\Parser;
 
 interface ParserInterface
 {
-
+    public function parse(int $type,$annotationObject);
 }

@@ -7,17 +7,13 @@
 
 namespace SwoftTest\Annotation\Testing\Annotation\Parser;
 
-
-use SwoftRewrite\Annotation\Annotation\Parser\Parser;
 use SwoftRewrite\Annotation\Annota\Mapping\AnnotationParser;
 
 /**
  * @AnnotationParser
+ *
  */
-class DemoClassParser extends Parser
+class DemoClassParser1
 {
-    public function parse(int $type, $annotationObject)
-    {
-        return [];
-    }
+
 }

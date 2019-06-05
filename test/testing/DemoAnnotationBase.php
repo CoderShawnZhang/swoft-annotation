@@ -7,10 +7,7 @@
  */
 
 namespace SwoftTest\Annotation\Testing;
-
 use SwoftTest\Annotation\Testing\Annotation\Mapping\DemoClass;
-use SwoftTest\Annotation\Testing\Annotation\Mapping\DemoProperty;
-use SwoftTest\Annotation\Testing\Annotation\Mapping\DemoMethod;
 
 /**
  * Class DemoAnnotation
