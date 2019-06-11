@@ -6,7 +6,7 @@ namespace SwoftRewrite\Annotation\Resource;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use SwoftRewrite\Annotation\Annota\Mapping\AnnotationParser;
+use SwoftRewrite\Annotation\Annotation\Mapping\AnnotationParser;
 use SwoftRewrite\Annotation\AnnotationRegister;
 use SwoftRewrite\Annotation\Contract\LoaderInterface;
 use SwoftRewrite\Stdlib\Helper\ComposerHelper;
@@ -74,6 +74,7 @@ class AnnotationResource extends Resource
                 if($isEnabled && $loaderObject instanceof LoaderInterface){
                     //注册loaderfile 文件路径
                     AnnotationRegister::registerAutoLoaderFile($loaderFile);
+                    //扫描这个有AutoLoader的src目录，
                     $this->loaderAnnotation($loaderObject);
                 }
 
@@ -257,10 +258,10 @@ class AnnotationResource extends Resource
     private function registerLoader()
     {
         AnnotationRegistry::registerLoader(function(string $class){
-           if(class_exists($class)){
-               return true;
-           }
-           return false;
+            if(class_exists($class)){
+                return true;
+            }
+            return false;
         });
     }
 }

@@ -10,5 +10,29 @@ namespace SwoftRewrite\Annotation\Annotation\Parser;
 
 abstract class Parser implements ParserInterface
 {
+    /**
+     * Class annotation
+     */
+    public const TYPE_CLASS = 1;
 
+    /**
+     * Property annotation
+     */
+    public const TYPE_PROPERTY = 2;
+
+    /**
+     * Method annotation
+     */
+    public const TYPE_METHOD = 3;
+
+    protected $className = '';
+    protected $reflectClass;
+    protected $classAnnotations = [];
+
+    public function __construct(string $className,\ReflectionClass $reflectionClass,array $classAnnotations)
+    {
+        $this->className = $className;
+        $this->reflectClass = $reflectionClass;
+        $this->classAnnotations = $classAnnotations;
+    }
 }

@@ -26,7 +26,7 @@ class AnnotationRegister
     private static $parsers = [];               //存放AnnotationParser 标记的注释类 // 注释 => 类名
     private static $annotations = [];           //类注释标记了 @Annotation 类的命名空间 类命名地址 下的注解对象，和类的反射对象
     private static $excludeFilenames = [];      //如果遍历到了Swoft.php文件存入： ‌Swoft.php
-
+    private static $autoLoaders = [];
     public static function load(array $config = [])
     {
         $resource = new AnnotationResource($config);
@@ -81,7 +81,7 @@ class AnnotationRegister
     public static function addAutoLoader(string $namespace,LoaderInterface $autoLoader):void
     {
         self::$classStats['autoloader']++;
-        self::$autoLoaderFiles[$namespace] = $autoLoader;
+        self::$autoLoaders[$namespace] = $autoLoader;
     }
 
     public static function getClassStats(){
@@ -96,6 +96,11 @@ class AnnotationRegister
     public static function getAutoLoader(string $namespace): ?LoaderInterface
     {
         return self::$autoLoaderFiles[$namespace] ?? null;
+    }
+
+    public static function getAutoLoaders()
+    {
+        return self::$autoLoaders;
     }
 
     public static function getAnnotations()
