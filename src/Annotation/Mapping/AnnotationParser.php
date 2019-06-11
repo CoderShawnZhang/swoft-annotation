@@ -5,7 +5,7 @@
  * Date: 2019/6/3
  * Time: 下午3:14
  */
-namespace SwoftRewrite\Annotation\Annota\Mapping;
+namespace SwoftRewrite\Annotation\Annotation\Mapping;
 
 /**
  * Class AnnotationParser
