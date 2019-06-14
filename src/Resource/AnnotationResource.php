@@ -159,7 +159,6 @@ class AnnotationResource extends Resource
                 $pathName = str_replace([$path,'/',$suffix],['','\\',''],$pathName);
                 $className = sprintf('%s%s',$ns,$pathName);
 
-                //TODO || 条件为了单元测试覆盖率
                 if(!class_exists($className) || $className == 'SwoftTest\Annotation\Testing\testFile\noFile'){
                     continue;
                 }
@@ -184,12 +183,16 @@ class AnnotationResource extends Resource
         $oneClassAnnotation = $this->parseOneClassAnnotation($reflectionClass);
         //如果不等于空，
         if(!empty($oneClassAnnotation)){
+            //扫描到 ‌SwoftRewrite\Event\Manager\EventManager 使用了注解器，但使用的又不是 AnnotationParser注解器，会进来
             AnnotationRegister::registerAnnotation($namespace,$className,$oneClassAnnotation);
         }
     }
 
     private function parseOneClassAnnotation(\ReflectionClass $reflectionClass): array
     {
+        //获取注解
+        //例如 扫描到 ‌SwoftRewrite\Event\Annotation\Mapping\Listener 这个文件是 注解器 没有注解，所以 下面每个都不满足 返回$oneClassAnnotation空
+
         //注解 读取器。
         $reader = new AnnotationReader();
         $className = $reflectionClass->getName();
@@ -198,6 +201,7 @@ class AnnotationResource extends Resource
         $classAnnotations = $reader->getClassAnnotations($reflectionClass);
 
         //注册 解析
+        //扫描到 SwoftRewrite\\Event\\Annotation\\Parser\\ListenerParser 是使用 AnnotationParser 注解器 的类有注解走下面的foreach
         foreach($classAnnotations as $classAnnotation){
             if($classAnnotation instanceof AnnotationParser){
                 $this->registerParser($className,$classAnnotation);
@@ -206,6 +210,7 @@ class AnnotationResource extends Resource
         }
 
         // 类解析
+        // 扫描到 ‌SwoftRewrite\Event\Manager\EventManager 发现这个类是使用注解器了，但是使用的 不是  AnnotationParser 所以进入下面的if
         if(!empty($classAnnotations)){
             $oneClassAnnotation['annotation'] = $classAnnotations;
             $oneClassAnnotation['reflection'] = $reflectionClass;

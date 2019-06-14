@@ -28,11 +28,17 @@ abstract class Parser implements ParserInterface
     protected $className = '';
     protected $reflectClass;
     protected $classAnnotations = [];
+    protected $methodName = '';
 
     public function __construct(string $className,\ReflectionClass $reflectionClass,array $classAnnotations)
     {
         $this->className = $className;
         $this->reflectClass = $reflectionClass;
         $this->classAnnotations = $classAnnotations;
+    }
+
+    public function setMethodName(string $methodName)
+    {
+        $this->methodName = $methodName;
     }
 }
